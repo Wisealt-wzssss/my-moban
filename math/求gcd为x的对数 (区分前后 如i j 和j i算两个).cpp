@@ -47,7 +47,7 @@ void solve() {
             gcd_cnt[i] -= gcd_cnt[j];
         }
     }
-    //求lcm_cnt的时候 就不需要倒序号 因为所有的都反过来了 现在是大的需要小的来更新(关系在于因子数量)
+    //求lcm_cnt的时候 就不需要倒序号 因为所有的都反过来了 现在是大的需要小的来更新(关系在于倍数数量)
     F(i, 1, n) {
         Fc(j, i * 2, n, i) {
             lcm_cnt[j] -= lcm_cnt[i];
@@ -66,3 +66,69 @@ int main()
     // cin>>T;
     while(T--) solve();
 } 
+/*
+    example question:
+    https://codeforces.com/gym/106241/problem/F
+
+    主要解决如何计算出 gcd和lcm等于x的对数 同时还需要x的倍数和因数出现了多少次
+    之后再通过容斥原理 就可以统计处 使得ijkt gcd lcm相等的下标
+    这个题主要难点在于 ijkt下标不能重复 所以我们统计处gcd lcm 的cnt后不能直接用 因为还有可能有等于x的数字 这样会导致ijkt重复
+    所以我们先去掉ijkt 之后再手动计算 有0个x 有1个x... 的时候
+
+    void solve() {
+    int n; cin>>n;
+    vi a(n + 1), cnt(n + 1, 0);
+    F(i, 1, n) cin>>a[i], cnt[a[i]]++;
+    vl gcd_cnt(n + 1, 0), lcm_cnt(n + 1, 0);
+    F(i, 1, n) {
+        FC(j, i, n, i) {
+            gcd_cnt[i] += cnt[j];
+            lcm_cnt[j] += cnt[i];
+        }
+    }
+    vl fac_cnt = gcd_cnt, times_cnt = lcm_cnt;
+    F(i, 1, n) {
+        gcd_cnt[i] = gcd_cnt[i] * (gcd_cnt[i] - 1);
+        lcm_cnt[i] = lcm_cnt[i] * (lcm_cnt[i] - 1);
+    }
+    DF(i, n, 1) {
+        FC(j, i * 2, n, i) {
+            gcd_cnt[i] -= gcd_cnt[j];
+        }
+    }
+    F(i, 1, n) {
+        FC(j, i * 2, n, i) {
+            lcm_cnt[j] -= lcm_cnt[i];
+        }
+    }
+    F(i, 1, n) {
+        fac_cnt[i] -= cnt[i];
+        times_cnt[i] -= cnt[i];
+
+        gcd_cnt[i] = (gcd_cnt[i] - ((fac_cnt[i] * cnt[i] % mod) * 2 % mod) - (cnt[i] * (cnt[i] - 1) % mod) + mod) % mod;
+        lcm_cnt[i] = (lcm_cnt[i] - ((times_cnt[i] * cnt[i] % mod) * 2 % mod) - (cnt[i] * (cnt[i] - 1) % mod) + mod) % mod;
+    }
+    int ans = 0;
+    F(i, 1, n) {
+        ans += gcd_cnt[i] * lcm_cnt[i];
+        ans %= mod;
+        ans += (cnt[i] * fac_cnt[i] % mod)* lcm_cnt[i] % mod * 2 % mod;
+        ans %= mod;
+        ans += gcd_cnt[i] * (cnt[i] * times_cnt[i] % mod) % mod * 2 % mod;
+        ans %= mod;
+        ans += cnt[i] * (cnt[i] - 1) % mod * lcm_cnt[i] % mod;
+        ans %= mod;
+        ans += cnt[i] * (cnt[i] - 1) % mod * gcd_cnt[i] % mod;
+        ans %= mod;
+        ans += cnt[i] * fac_cnt[i] % mod * (cnt[i] - 1) * times_cnt[i] % mod * 4 % mod;
+        ans %= mod;
+        ans += cnt[i] * (cnt[i] - 1) % mod * (cnt[i] - 2) % mod * fac_cnt[i] % mod * 2 % mod;
+        ans %= mod;
+        ans += cnt[i] * (cnt[i] - 1) % mod * (cnt[i] - 2) % mod * times_cnt[i]  % mod * 2 % mod;
+        ans %= mod;
+        ans += cnt[i] * (cnt[i] - 1) % mod * (cnt[i] - 2) % mod * (cnt[i] - 3) % mod;
+        ans %= mod;
+    }
+    cout<<ans<<endl;
+}
+*/
