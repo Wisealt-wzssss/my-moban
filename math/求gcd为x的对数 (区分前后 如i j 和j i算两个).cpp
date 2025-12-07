@@ -31,17 +31,26 @@ void solve() {
     vi cnt(n + 1, 0);
     F(i, 1, n) cin>>a[i], cnt[a[i]]++;
     vl gcd_cnt(n + 1, 0);
+    vl lcm_cnt(n + 1, 0);
     F(i, 1, n) {
         Fc(j, i, n, i) {
             gcd_cnt[i] += cnt[j];
+            lcm_cnt[j] += cnt[i];
         }
     }
     F(i, 0, n) {
         gcd_cnt[i] = gcd_cnt[i] * (gcd_cnt[i] - 1);
+        lcm_cnt[i] = lcm_cnt[i] * (lcm_cnt[i] - 1);
     }
     DF(i, n, 1) {
         Fc(j, i * 2, n, i) {
             gcd_cnt[i] -= gcd_cnt[j];
+        }
+    }
+    //求lcm_cnt的时候 就不需要倒序号 因为所有的都反过来了 现在是大的需要小的来更新(关系在于因子数量)
+    F(i, 1, n) {
+        Fc(j, i * 2, n, i) {
+            lcm_cnt[j] -= lcm_cnt[i];
         }
     }
     // F(i, 1, n) {
