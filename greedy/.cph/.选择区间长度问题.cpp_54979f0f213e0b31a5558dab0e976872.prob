@@ -1,0 +1,1 @@
+{"name":"Local: 选择区间长度问题","url":"/Users/wzssss/code/aaa mymoban/greedy/选择区间长度问题.cpp","tests":[{"id":1766159955146,"input":"4\n3\n1 2 3\n4\n1 2 4 5\n6\n1 2 11 12 21 22\n7\n0 1 2 3 5 8 13\n","output":"2\n2\n3\n6\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/wzssss/code/aaa mymoban/greedy/选择区间长度问题.cpp","group":"local","local":true}
